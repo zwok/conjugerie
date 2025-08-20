@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="f3e0bfce-9943-4f60-9b83-895210e16aa0" name="ovh">
+        <fileTransfer rootFolder="/home/herosdv" accessType="SFTP" host="ssh.cluster029.hosting.ovh.net" port="22" sshConfigId="d709c20b-10e1-4708-830f-5de6bfe62f12" sshConfig="herosdv@ssh.cluster029.hosting.ovh.net:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
