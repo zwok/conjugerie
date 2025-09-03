@@ -34,5 +34,11 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'smartschool' => [
+        'client_id' => env('SMARTSCHOOL_CLIENT_ID'),
+        'client_secret' => env('SMARTSCHOOL_CLIENT_SECRET'),
+        'redirect' => env('SMARTSCHOOL_REDIRECT_URI'),
+        'platform' => env('SMARTSCHOOL_PLATFORM')
+    ],
 
 ];

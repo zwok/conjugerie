@@ -3,9 +3,21 @@
 use App\Http\Controllers\ProfileController;
 use App\Livewire\ConjugationPractice;
 use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
 
 Route::get('/', function () {
     return view('welcome');
+})->name('welcome');
+
+
+Route::get('/auth/redirect', function () {
+    return Socialite::driver('smartschool')->redirect();
+});
+
+Route::get('/auth/callback', function () {
+    $user = Socialite::driver('smartschool')->user();
+
+    // $user->token
 });
 
 Route::get('/practice', function () {

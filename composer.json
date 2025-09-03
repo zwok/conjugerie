@@ -1,0 +1,7 @@
+{
+    "require": {
+        "laravel/jetstream": "^5.3",
+        "laravel/socialite": "^5.23",
+        "socialiteproviders/zoho": "^4.1"
+    }
+}
