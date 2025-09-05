@@ -12,7 +12,7 @@ Route::get('/', function () {
 
 Route::get('/auth/redirect', function () {
     return Socialite::driver('smartschool')->redirect();
-});
+})->name('smartschool.redirect');
 
 Route::get('/auth/callback', function () {
     $user = Socialite::driver('smartschool')->user();

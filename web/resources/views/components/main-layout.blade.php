@@ -28,17 +28,18 @@
 
 <header class="w-full relative z-10 text-white flex justify-center">
     <div class="w-2xl py-4 flex justify-between items-center">
+        <img src="/img/logo.svg" class="h-10" alt="">
         <h1 class="text-2xl font-bold logo-text">
             <a href="{{ route('welcome') }}">{{ config('app.name', 'La Conjugerie') }}</a>
         </h1>
         <nav>
             <ul class="flex space-x-4">
-                <li><a href="{{ route('practice') }}" class="nav-link">Practice</a></li>
                 @if (Route::has('welcome.nl'))
                     <li><a href="{{ route('welcome.nl') }}" class="nav-link">Nederlands</a></li>
                 @endif
                 @auth
-                    <li><a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a></li>
+                        <li><a href="{{ route('practice') }}" class="nav-link">Practice</a></li>
+                        <li><a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a></li>
                     <li>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -46,8 +47,7 @@
                         </form>
                     </li>
                 @else
-                    <li><a href="{{ route('login') }}" class="nav-link">Login</a></li>
-                    <li><a href="{{ route('register') }}" class="nav-link">Register</a></li>
+                    <li><a href="{{ route('smartschool.redirect') }}" class="nav-link">Login</a></li>
                 @endauth
             </ul>
         </nav>
