@@ -40,6 +40,9 @@
                 @auth
                         <li><a href="{{ route('practice') }}" class="nav-link">Practice</a></li>
                         <li><a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a></li>
+                        @if(auth()->user()?->is_teacher)
+                            <li><a href="{{ route('filament.admin.pages.dashboard') }}" class="nav-link">Admin</a></li>
+                        @endif
                     <li>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
