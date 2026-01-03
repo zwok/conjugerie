@@ -63,15 +63,7 @@ class ConjugationResource extends Resource
                         'ils_elles' => 'Ils/Elles',
                     ])
                     ->required()
-                    ->rule(function (callable $get) {
-                        // Enforce composite uniqueness (verb_id, tense_id, person)
-                        return Rule::unique('conjugations')
-                            ->where(fn ($q) => $q
-                                ->where('verb_id', $get('verb_id'))
-                                ->where('tense_id', $get('tense_id'))
-                            )
-                            ->ignore(request()->route('record'));
-                    }),
+                   ,
 
                 TextInput::make('conjugated_form')
                     ->label('Conjugated form')
