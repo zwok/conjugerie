@@ -470,14 +470,53 @@ class ConjugationSeeder extends Seeder
     }
 
     /**
-     * Create conjugations for a specific tense
+     * Normalize an input tense key (which may contain accents/legacy keys)
+     * to the canonical `tense_id` used in the `tenses` table.
+     */
+    private function normalizeTenseId(string $tense): ?string
+    {
+        $map = [
+            'present' => 'present',
+            'imparfait' => 'imparfait',
+            'futur_simple' => 'futur_simple',
+            'plus_que_parfait' => 'plus_que_parfait',
+            'passé_composé' => 'passe_compose',
+            'passe_compose' => 'passe_compose',
+            'futur_antérieur' => 'futur_anterieur',
+            'futur_anterieur' => 'futur_anterieur',
+            'conditionnel_présent' => 'conditionnel_present',
+            'conditionnel_present' => 'conditionnel_present',
+            'conditionnel_passé' => 'conditionnel_passe',
+            'conditionnel_passe' => 'conditionnel_passe',
+            // New tenses supported by catalog (keep if used later)
+            'subjonctif_present' => 'subjonctif_present',
+            'subjonctif_passe' => 'subjonctif_passe',
+            'imperatif_present' => 'imperatif_present',
+        ];
+
+        // Explicitly drop passé_simple as per current requirements
+        if ($tense === 'passé_simple' || $tense === 'passe_simple') {
+            return null;
+        }
+
+        return $map[$tense] ?? null;
+    }
+
+    /**
+     * Create conjugations for a specific tense (uses `tense_id`).
      */
     private function createConjugationsForTense(Verb $verb, string $tense, array $conjugations): void
     {
+        $tenseId = $this->normalizeTenseId($tense);
+        if (!$tenseId) {
+            // Skip creating if tense is not part of the canonical set
+            return;
+        }
+
         foreach ($conjugations as $person => $conjugatedForm) {
             Conjugation::create([
                 'verb_id' => $verb->id,
-                'tense' => $tense,
+                'tense_id' => $tenseId,
                 'person' => $person,
                 'conjugated_form' => $conjugatedForm
             ]);

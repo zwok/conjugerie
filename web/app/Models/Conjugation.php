@@ -8,9 +8,14 @@ class Conjugation extends Model
 {
     protected $fillable = [
         'verb_id',
-        'tense',
+        'tense_id',
         'person',
         'conjugated_form',
+        'enabled',
+    ];
+
+    protected $casts = [
+        'enabled' => 'boolean',
     ];
 
     /**
@@ -19,6 +24,14 @@ class Conjugation extends Model
     public function verb()
     {
         return $this->belongsTo(Verb::class);
+    }
+
+    /**
+     * The tense this conjugation belongs to.
+     */
+    public function tense()
+    {
+        return $this->belongsTo(Tense::class);
     }
 
     /**

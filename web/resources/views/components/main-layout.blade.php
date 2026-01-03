@@ -22,9 +22,9 @@
     <!-- Additional Styles -->
     @stack('styles')
 </head>
-<body class="antialiased bg-base text-white min-h-screen">
-<img class="fixed z-0 -top-10" src="/img/bg_topleft.png" alt="">
-<img class="fixed z-0 -bottom-10 -right-10" src="/img/bg_bottomright.png" alt="">
+<body class="antialiased background  min-h-screen">
+{{--<img class="fixed z-0 -top-10" src="/img/bg_topleft.png" alt="">--}}
+{{--<img class="fixed z-0 -bottom-10 -right-10" src="/img/bg_bottomright.png" alt="">--}}
 
 <header class="w-full relative z-10 text-white flex justify-center">
     <div class="w-2xl py-4 flex justify-between items-center">
@@ -33,7 +33,7 @@
             <a href="{{ route('welcome') }}">{{ config('app.name', 'La Conjugerie') }}</a>
         </h1>
         <nav>
-            <ul class="flex space-x-4">
+            <ul class="flex space-x-4 font-bold">
                 @if (Route::has('welcome.nl'))
                     <li><a href="{{ route('welcome.nl') }}" class="nav-link">Nederlands</a></li>
                 @endif
@@ -47,16 +47,16 @@
                         </form>
                     </li>
                 @else
-                    <li><a href="{{ route('smartschool.redirect') }}" class="nav-link">Login</a></li>
+                    <li><a href="{{ route('smartschool.redirect') }}" class="button-primary">Login</a></li>
                 @endauth
             </ul>
         </nav>
     </div>
 </header>
 
-<main class="w-full z-10 relative text-white flex justify-center py-10">
+<main class="w-full z-10 relative  flex justify-center py-10">
     <!-- Main content -->
-    <div class="w-2xl rounded-lg bg-secondary p-5 text-white">
+    <div class="w-2xl rounded-lg bg-white p-5">
         {{ $slot }}
     </div>
 </main>

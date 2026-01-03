@@ -2,8 +2,45 @@
 
 
 @theme {
-    --color-primary: #f46f47;
-    --color-primary-light: #ffa589;
-    --color-secondary: #5f2c5c;
-    --color-base: #0a1026;
+    --color-primary: #57cc02;
+    --color-primary-light: #8ccc5f;
+    --color-secondary: #235391;
+    --color-secondary-light: #e2f6ff;
+    --color-base: #235391;
+    --color-grey: #bcbcbc;
+    --color-dark: #515151;
+}
+
+
+@layer components {
+    .background {
+        background-color: --color-primary;
+        opacity: 1;
+        background: radial-gradient(circle, transparent 20%, #235391 20%, #235391 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, #235391 20%, #235391 80%, transparent 80%, transparent) 45px 45px, linear-gradient(#39659f 3.6px, transparent 3.6px) 0 -1.8px, linear-gradient(90deg, #39659f 3.6px, #235391 3.6px) -1.8px 0;
+        background-size: 90px 90px, 90px 90px, 45px 45px, 45px 45px;
+    }
+
+    .button-primary {
+        @apply bg-primary;
+        @apply rounded-full;
+        @apply px-4 py-2;
+        color: white;
+        font-weight: bold;
+    }
+
+    .button-secondary {
+        @apply bg-secondary;
+        @apply rounded-full;
+        @apply px-4 py-2;
+        color: white;
+        font-weight: bold;
+    }
+
+    .button-grey {
+        @apply bg-grey;
+        @apply rounded-full;
+        @apply px-4 py-2;
+        color: white;
+        font-weight: bold;
+    }
 }

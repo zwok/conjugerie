@@ -1,6 +1,6 @@
 <x-main-layout>
 
-    <h2 class="text-2xl font-bold mb-6 float-animation">Welkom bij <span class="text-transparent bg-clip-text bg-gradient-to-b from-primary to-primary-light">La Conjugerie</span></h2>
+    <h2 class="text-2xl font-bold mb-6 float-animation">Welkom bij <span class="text-transparent bg-clip-text bg-primary">La Conjugerie</span></h2>
 
     <p class="mb-6">
         La Conjugerie is een hulpmiddel om Franse werkwoorden te leren. Met deze tool kun je:
@@ -13,7 +13,7 @@
     </ul>
 
     <div class="w-full flex justify-center">
-    <a href="{{ route('login') }}" class="rounded-full bg-primary px-3 py-2 font-bold">
+    <a href="{{ route('login') }}" class="button">
         Log in om te oefenen
     </a>
     </div>

@@ -21,6 +21,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        // Smartschool fields
+        'smartschool_id',
+        'smartschool_username',
+        'smartschool_platform',
     ];
 
     /**
@@ -52,5 +56,30 @@ class User extends Authenticatable
     public function studentAnswers()
     {
         return $this->hasMany(StudentAnswer::class);
+    }
+
+    /**
+     * The groups that the user belongs to.
+     */
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class);
+    }
+
+    /**
+     * Computed property to determine if the user is a teacher.
+     * A user is a teacher if they belong to a group with code 'LKR'.
+     *
+     * Usage: $user->is_teacher
+     */
+    public function getIsTeacherAttribute(): bool
+    {
+        // If groups are already loaded, avoid an extra query
+        if ($this->relationLoaded('groups')) {
+            return (bool) $this->groups->firstWhere('code', 'LKR');
+        }
+
+        // Otherwise check via an existence query
+        return $this->groups()->where('code', 'LKR')->exists();
     }
 }

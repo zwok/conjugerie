@@ -29,17 +29,19 @@ class ConjugationPractice extends Component
         'ils_elles' => 'Ils/Elles'
     ];
 
-    // Map of tense names for display
+    // Canonical map of tense IDs to display names (fallback if relation not loaded)
     protected $tenseNames = [
         'present' => 'Présent',
+        'passe_compose' => 'Passé composé',
         'imparfait' => 'Imparfait',
-        'futur_simple' => 'Futur Simple',
-        'passé_composé' => 'Passé Composé',
         'plus_que_parfait' => 'Plus-que-parfait',
-        'passé_simple' => 'Passé Simple',
-        'futur_antérieur' => 'Futur Antérieur',
-        'conditionnel_présent' => 'Conditionnel Présent',
-        'conditionnel_passé' => 'Conditionnel Passé'
+        'futur_simple' => 'Futur simple',
+        'futur_anterieur' => 'Futur antérieur',
+        'conditionnel_present' => 'Conditionnel présent',
+        'conditionnel_passe' => 'Conditionnel passé',
+        'subjonctif_present' => 'Subjonctif présent',
+        'subjonctif_passe' => 'Subjonctif passé',
+        'imperatif_present' => 'Impératif présent',
     ];
 
     public function mount()
@@ -57,13 +59,14 @@ class ConjugationPractice extends Component
 
         // Get a random conjugation
         // In a real app, you might want to select based on the user's progress
-        $this->currentConjugation = Conjugation::with('verb')
+        $this->currentConjugation = Conjugation::with(['verb','tense'])
+            ->where('enabled', true)
             ->inRandomOrder()
             ->first();
 
         if ($this->currentConjugation) {
             $this->infinitive = $this->currentConjugation->verb->infinitive;
-            $this->tense = $this->currentConjugation->tense;
+            $this->tense = $this->currentConjugation->tense_id;
             $this->person = $this->currentConjugation->person;
         } else {
             // Handle case where no conjugations exist yet
@@ -111,6 +114,9 @@ class ConjugationPractice extends Component
 
     public function getTenseName()
     {
+        if ($this->currentConjugation && $this->currentConjugation->relationLoaded('tense') && $this->currentConjugation->tense) {
+            return $this->currentConjugation->tense->name;
+        }
         return $this->tenseNames[$this->tense] ?? $this->tense;
     }
 

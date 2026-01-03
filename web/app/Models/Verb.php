@@ -8,15 +8,7 @@ class Verb extends Model
 {
     protected $fillable = [
         'infinitive',
-        'english_translation',
         'group',
-        'is_irregular',
-        'is_auxiliary',
-    ];
-
-    protected $casts = [
-        'is_irregular' => 'boolean',
-        'is_auxiliary' => 'boolean',
     ];
 
     /**

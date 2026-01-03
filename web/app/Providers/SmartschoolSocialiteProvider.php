@@ -38,7 +38,6 @@ class SmartschoolSocialiteProvider extends AbstractProvider
         ]);
 
         $this->credentialsResponseBody = json_decode($response->getBody()->getContents(), true);
-
         return $this->parseAccessToken($response->getBody());
     }
 
@@ -47,7 +46,7 @@ class SmartschoolSocialiteProvider extends AbstractProvider
      */
     protected function getUserByToken($token)
     {
-        $responseUser = $this->getHttpClient()->get("https://oauth.smartschool.be/Api/V1/fulluserinfo", [
+        $responseUser = $this->getHttpClient()->get("https://oauth.smartschool.be/Api/V1/userinfo", [
             'query' => [
                 'access_token' => $token,
             ],
@@ -70,13 +69,7 @@ class SmartschoolSocialiteProvider extends AbstractProvider
      */
     protected function mapUserToObject(array $user)
     {
-        return (new User())->setRaw($user)->map([
-            'id'    => $user['userID'],
-            'nickname' => $user['koppelingsveldschoolagenda'],
-            'name' => $user['fullname'],
-            'email' => $user['email'],
-            'avatar' => $user['username'],
-        ]);
+        return (new User())->setRaw($user);
     }
 
     public static function additionalConfigKeys()
