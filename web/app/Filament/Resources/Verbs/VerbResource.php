@@ -27,8 +27,10 @@ class VerbResource extends Resource
         return $schema
             ->components([
                 TextInput::make('infinitive')
+                    ->label('Infinitif')
                     ->required(),
                 TextInput::make('group')
+                    ->label('Groupe')
                     ->required(),
             ]);
     }
@@ -38,14 +40,18 @@ class VerbResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('infinitive')
+                    ->label('Infinitif')
                     ->searchable(),
                 TextColumn::make('group')
+                    ->label('Groupe')
                     ->searchable(),
                 TextColumn::make('created_at')
+                    ->label('Créé le')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->label('Mis à jour le')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -54,14 +60,21 @@ class VerbResource extends Resource
                 //
             ])
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
+                EditAction::make()->label('Modifier'),
+                DeleteAction::make()->label('Supprimer'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->label('Supprimer la sélection'),
                 ]),
             ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            'posts' => RelationManagers\ConjugationsRelationManager::class,
+        ];
     }
 
     public static function getPages(): array

@@ -5,7 +5,7 @@
         <div class="mb-8">
             <div class="flex justify-between items-center mb-4">
                 <div class="text-lg font-medium">
-                    <span class="text-dark">Verb:</span>
+                    <span class="text-dark">Verbe:</span>
                     <span class="text-secondary font-bold">{{ $infinitive }}</span>
                 </div>
                 <div class="text-lg font-medium">
@@ -20,39 +20,53 @@
                 </p>
             </div>
 
-            <div class="mb-6">
+            <div class="mb-2" x-data x-on:refocus-answer.window="$refs.answer?.focus(); $refs.answer?.select();">
                 <label for="answer" class="block text-sm font-medium text-gray-700 mb-2">Votre Réponse:</label>
                 <input
                     type="text"
                     id="answer"
-                    wire:model="studentAnswer"
+                    wire:key="answer-input"
+                    wire:model.live="studentAnswer"
                     wire:keydown.enter="checkAnswer"
                     class="w-full px-4 py-2 border border-gray-300 rounded-full text-center text-2xl focus:outline-0"
                     placeholder="Entrez la conjugaison correcte"
+                    x-ref="answer"
+                    autofocus
+                    @disabled($remainingTries === 0)
                     autocomplete="off"
                 >
             </div>
 
-            <div class="flex space-x-4">
-                <button
-                    wire:click="checkAnswer"
-                    class="flex-1 button-secondary"
-                >
-                    Check Answer
-                </button>
-                <button
-                    wire:click="getNewConjugation"
-                    class="flex-1 button-grey"
-                >
-                    Next Verb
-                </button>
+            <div class="mt-4 mb-6 text-center">
+                @if ($showFeedback)
+                    <div class="p-4 rounded-full {{ $messageType === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                        {!! $message !!}
+                    </div>
+                @endif
+
             </div>
 
-            @if ($showFeedback)
-                <div class="mt-6 p-4 rounded-md {{ $messageType === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                    {{ $message }}
-                </div>
-            @endif
+            <div class="flex space-x-4">
+                @if($remainingTries > 0)
+                    <button
+                        wire:click="checkAnswer"
+                        class="flex-1 rounded-full {{ ($questionDone || $studentAnswer === '') ? 'button-secondary opacity-50 cursor-not-allowed' : 'button-secondary' }}"
+                        @disabled($questionDone || $studentAnswer === '')
+>
+                        Vérifier
+                    </button>
+                @endif
+
+                @if($remainingTries === 0)
+                    <button
+                        wire:click="getNewConjugation"
+                        class="flex-1 button-secondary rounded-full"
+>
+                        Suivant
+                    </button>
+                @endif
+            </div>
+
         </div>
     @else
         <div class="p-4 bg-yellow-100 text-yellow-800 rounded-md">

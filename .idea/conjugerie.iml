@@ -167,6 +167,8 @@
       <excludeFolder url="file://$MODULE_DIR$/web/vendor/phpseclib/phpseclib" />
       <excludeFolder url="file://$MODULE_DIR$/web/vendor/socialiteproviders/manager" />
       <excludeFolder url="file://$MODULE_DIR$/web/vendor/socialiteproviders/zoho" />
+      <excludeFolder url="file://$MODULE_DIR$/web/vendor/barryvdh/laravel-debugbar" />
+      <excludeFolder url="file://$MODULE_DIR$/web/vendor/php-debugbar/php-debugbar" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

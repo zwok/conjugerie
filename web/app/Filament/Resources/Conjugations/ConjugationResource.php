@@ -35,25 +35,25 @@ class ConjugationResource extends Resource
     {
         return $schema
             ->components([
-                // Verb selection via relationship (shows infinitive)
+                // Sélection du verbe via la relation (affiche l'infinitif)
                 Select::make('verb_id')
-                    ->label('Verb')
+                    ->label('Verbe')
                     ->relationship('verb', 'infinitive')
                     ->searchable()
                     ->preload()
                     ->required(),
 
-                // Tense selection via relationship (shows name)
+                // Sélection du temps via la relation (affiche le nom)
                 Select::make('tense_id')
-                    ->label('Tense')
+                    ->label('Temps')
                     ->relationship('tense', 'name')
                     ->searchable()
                     ->preload()
                     ->required(),
 
-                // Person with pretty labels
+                // Personne avec libellés lisibles
                 Select::make('person')
-                    ->label('Person')
+                    ->label('Personne')
                     ->options([
                         'je' => 'Je',
                         'tu' => 'Tu',
@@ -66,11 +66,11 @@ class ConjugationResource extends Resource
                    ,
 
                 TextInput::make('conjugated_form')
-                    ->label('Conjugated form')
+                    ->label('Forme conjuguée')
                     ->required(),
 
                 Toggle::make('enabled')
-                    ->label('Enabled')
+                    ->label('Activé')
                     ->default(true)
                     ->required(),
             ]);
@@ -81,15 +81,15 @@ class ConjugationResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('verb.infinitive')
-                    ->label('Verb')
+                    ->label('Verbe')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('tense.name')
-                    ->label('Tense')
+                    ->label('Temps')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('person')
-                    ->label('Person')
+                    ->label('Personne')
                     ->formatStateUsing(fn ($state) => match ($state) {
                         'je' => 'Je',
                         'tu' => 'Tu',
@@ -101,10 +101,10 @@ class ConjugationResource extends Resource
                     })
                     ->sortable(),
                 TextColumn::make('conjugated_form')
-                    ->label('Conjugated form')
+                    ->label('Forme conjuguée')
                     ->searchable(),
                 ToggleColumn::make('enabled')
-                    ->label('Enabled')
+                    ->label('Activé')
                     ->sortable(),
                 TextColumn::make('updated_at')
                     ->dateTime()
@@ -117,25 +117,25 @@ class ConjugationResource extends Resource
             ])
             ->filters([
                 SelectFilter::make('verb')
-                    ->label('Verb')
+                    ->label('Verbe')
                     ->relationship('verb', 'infinitive')
                     ->searchable(),
                 SelectFilter::make('tense')
-                    ->label('Tense')
+                    ->label('Temps')
                     ->relationship('tense', 'name')
                     ->searchable(),
                 TernaryFilter::make('enabled')
-                    ->label('Enabled')
+                    ->label('Activé')
                     ->boolean(),
             ])
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
+                EditAction::make()->label('Modifier'),
+                DeleteAction::make()->label('Supprimer'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     BulkAction::make('enable')
-                        ->label('Enable selected')
+                        ->label('Activer la sélection')
                         ->icon('heroicon-m-check')
                         ->color('success')
                         ->requiresConfirmation()
@@ -143,14 +143,14 @@ class ConjugationResource extends Resource
                             $records->each->update(['enabled' => true]);
                         }),
                     BulkAction::make('disable')
-                        ->label('Disable selected')
+                        ->label('Désactiver la sélection')
                         ->icon('heroicon-m-x-mark')
                         ->color('gray')
                         ->requiresConfirmation()
                         ->action(function (Collection $records) {
                             $records->each->update(['enabled' => false]);
                         }),
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->label('Supprimer la sélection'),
                 ]),
             ]);
     }

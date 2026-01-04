@@ -38,19 +38,19 @@
                     <li><a href="{{ route('welcome.nl') }}" class="nav-link">Nederlands</a></li>
                 @endif
                 @auth
-                        <li><a href="{{ route('practice') }}" class="nav-link">Practice</a></li>
-                        <li><a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a></li>
+                        <li><a href="{{ route('practice') }}" class="nav-link">Pratiquer</a></li>
+                        <li><a href="{{ route('dashboard') }}" class="nav-link">Compte</a></li>
                         @if(auth()->user()?->is_teacher)
                             <li><a href="{{ route('filament.admin.pages.dashboard') }}" class="nav-link">Admin</a></li>
                         @endif
                     <li>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="nav-link">Logout</button>
+                            <button type="submit" class="nav-link">Se déconnecter</button>
                         </form>
                     </li>
                 @else
-                    <li><a href="{{ route('smartschool.redirect') }}" class="button-primary">Login</a></li>
+                    <li><a href="{{ route('smartschool.redirect') }}" class="button-primary">Se connecter</a></li>
                 @endauth
             </ul>
         </nav>
