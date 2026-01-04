@@ -26,7 +26,7 @@ class ConjugationPractice extends Component
 
     // Map of person pronouns for display
     protected $personPronouns = [
-        'je' => 'Je',
+        'je' => 'Je/J',
         'tu' => 'Tu',
         'il_elle_on' => 'Il/Elle/On',
         'nous' => 'Nous',
