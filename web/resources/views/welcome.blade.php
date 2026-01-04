@@ -1,20 +1,31 @@
 <x-main-layout>
+    <div class="text-center space-y-6">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-secondary">
+            Bienvenue à <span class="text-transparent bg-clip-text bg-primary">La Conjugerie</span>
+        </h1>
+        <p class="text-lg text-gray-700 max-w-2xl mx-auto">
+            Apprends et pratique la conjugaison des verbes français de manière simple et ludique.
+            Choisis un verbe, un temps, et entraine-toi à ton rythme.
+        </p>
+        <ul class="text-left max-w-xl mx-auto space-y-2 text-gray-700">
+            <li>• Pratiquer les conjugaisons les plus courantes</li>
+            <li>• Tester tes connaissances selon la personne et le temps</li>
+            <li>• Suivre tes progrès au fil du temps</li>
+        </ul>
 
-    <h2 class="text-2xl font-bold mb-6 float-animation">Welkom bij <span class="text-transparent bg-clip-text bg-primary">La Conjugerie</span></h2>
+        @guest
+            <div class="pt-2">
+                <a href="{{ route('smartschool.redirect') }}" class="button-primary inline-block">
+                    Se connecter avec Smartschool
+                </a>
+            </div>
+        @endguest
 
-    <p class="mb-6">
-        La Conjugerie is een hulpmiddel om Franse werkwoorden te leren. Met deze tool kun je:
-    </p>
-
-    <ul class="playful-list mb-6 space-y-3">
-        <li>Franse werkwoordvervoegingen oefenen</li>
-        <li>Je kennis van verschillende tijden en vormen testen</li>
-        <li>Je voortgang bijhouden en je vaardigheden verbeteren</li>
-    </ul>
-
-    <div class="w-full flex justify-center">
-    <a href="{{ route('login') }}" class="button">
-        Log in om te oefenen
-    </a>
+        @auth
+            <div class="flex items-center justify-center gap-3 pt-2">
+                <a href="{{ route('dashboard') }}" class="button-secondary">Compte</a>
+                <a href="{{ route('practice') }}" class="button-primary">Pratiquer</a>
+            </div>
+        @endauth
     </div>
 </x-main-layout>

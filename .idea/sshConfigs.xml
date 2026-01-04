@@ -2,7 +2,7 @@
 <project version="4">
   <component name="SshConfigs">
     <configs>
-      <sshConfig authType="PASSWORD" host="ssh.cluster029.hosting.ovh.net" id="d709c20b-10e1-4708-830f-5de6bfe62f12" port="22" nameFormat="DESCRIPTIVE" username="herosdv" useOpenSSHConfig="true" />
+      <sshConfig authType="PASSWORD" host="ssh.cluster129.hosting.ovh.net" id="d709c20b-10e1-4708-830f-5de6bfe62f12" port="22" nameFormat="DESCRIPTIVE" username="herosdv" useOpenSSHConfig="true" />
     </configs>
   </component>
 </project>

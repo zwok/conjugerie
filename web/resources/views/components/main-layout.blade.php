@@ -30,7 +30,7 @@
     <div class="w-2xl py-4 flex justify-between items-center">
         <img src="/img/logo.svg" class="h-10" alt="">
         <h1 class="text-2xl font-bold logo-text">
-            <a href="{{ route('welcome') }}">{{ config('app.name', 'La Conjugerie') }}</a>
+            <a href="{{ auth()->check() ? route('dashboard') : route('welcome') }}">{{ config('app.name', 'La Conjugerie') }}</a>
         </h1>
         <nav>
             <ul class="flex space-x-4 font-bold">
@@ -38,9 +38,9 @@
                     <li><a href="{{ route('welcome.nl') }}" class="nav-link">Nederlands</a></li>
                 @endif
                 @auth
-                        <li><a href="{{ route('practice') }}" class="nav-link">Pratiquer</a></li>
                         <li><a href="{{ route('dashboard') }}" class="nav-link">Compte</a></li>
-                        @if(auth()->user()?->is_teacher)
+                        <li><a href="{{ route('practice') }}" class="nav-link">Pratiquer</a></li>
+                    @if(auth()->user()?->is_teacher)
                             <li><a href="{{ route('filament.admin.pages.dashboard') }}" class="nav-link">Admin</a></li>
                         @endif
                     <li>
