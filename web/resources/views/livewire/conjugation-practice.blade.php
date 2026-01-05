@@ -1,4 +1,4 @@
-<div class="max-w-2xl mx-auto p-6">
+<div class="max-w-2xl mx-auto p-0 md:p-6">
     <h1 class="text-3xl font-bold text-center mb-8 text-secondary">Pratiquer</h1>
 
     @if ($currentConjugation)
@@ -14,7 +14,7 @@
                 </div>
             </div>
 
-            <div class="bg-secondary-light p-6 rounded-lg mb-6">
+            <div class="bg-secondary-light p-4 md:p-6 rounded-lg mb-6">
                 <p class="text-xl text-center font-bold text-secondary">
                     {{ $this->getPersonPronoun() }} <span class="text-gray-500">({{ $infinitive }})</span>
                 </p>
@@ -28,7 +28,7 @@
                     wire:key="answer-input"
                     wire:model.live="studentAnswer"
                     wire:keydown.enter="checkAnswer"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-full text-center text-2xl focus:outline-0"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-full text-center text-xl focus:outline-0"
                     placeholder="Entrez la conjugaison correcte"
                     x-ref="answer"
                     autofocus

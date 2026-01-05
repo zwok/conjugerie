@@ -34,13 +34,6 @@
                             </div>
                         </div>
 
-                        <!-- Actions rapides -->
-                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                            <a href="{{ route('practice') }}" class="button-primary text-center">{{ __('Practice') }}</a>
-                            @if($user->is_teacher)
-                                <a href="{{ route('filament.admin.pages.dashboard') }}" class="button-secondary text-center">{{ __('Admin') }}</a>
-                            @endif
-                        </div>
                     </div>
                 </div>
             </div>
