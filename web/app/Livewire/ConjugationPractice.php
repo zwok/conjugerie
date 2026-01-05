@@ -129,13 +129,15 @@ class ConjugationPractice extends Component
             // Ask the browser to refocus the input
             $this->dispatch('refocus-answer');
         } else {
-            // Out of tries: reveal correct answer and finish question
-            $this->message = 'Plus de tentatives. La bonne réponse est : <strong>' . $this->currentConjugation->conjugated_form . '</strong>';
+            // Out of tries: reveal correct answer but require user to type it
+            $this->message = 'Plus de tentatives. La bonne réponse est : <strong>' . $this->currentConjugation->conjugated_form . '</strong>. Veuillez la saisir pour continuer.';
             $this->messageType = 'error';
             $this->showFeedback = true;
-            // Clear input before disabling field to ensure DOM is updated
+            // Clear input so user must retype the shown answer
             $this->studentAnswer = '';
-            $this->questionDone = true;
+            // Refocus input field so user can immediately type the answer
+            $this->dispatch('refocus-answer');
+            // Don't set questionDone yet - user must type correct answer first
         }
     }
 

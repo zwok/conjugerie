@@ -20,19 +20,19 @@
                 </p>
             </div>
 
-            <div class="mb-2" x-data x-on:refocus-answer.window="$refs.answer?.focus(); $refs.answer?.select();">
+            <div class="mb-2" x-data="{ questionDone: @entangle('questionDone') }" x-on:refocus-answer.window="$refs.answer?.focus(); $refs.answer?.select();">
                 <label for="answer" class="block text-sm font-medium text-gray-700 mb-2">Votre Réponse:</label>
                 <input
                     type="text"
                     id="answer"
                     wire:key="answer-input"
                     wire:model.live="studentAnswer"
-                    wire:keydown.enter="checkAnswer"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-full text-center text-xl focus:outline-0"
+                    @keydown.enter="questionDone ? $wire.getNewConjugation() : $wire.checkAnswer()"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-full text-center text-xl focus:outline-0 @if($questionDone) bg-gray-100 @endif"
                     placeholder="Entrez la conjugaison correcte"
                     x-ref="answer"
                     autofocus
-                    @disabled($remainingTries === 0)
+                    @readonly($questionDone)
                     autocomplete="off"
                 >
             </div>
@@ -47,20 +47,20 @@
             </div>
 
             <div class="flex space-x-4">
-                @if($remainingTries > 0)
+                @if(!$questionDone)
                     <button
                         wire:click="checkAnswer"
-                        class="flex-1 rounded-full {{ ($questionDone || $studentAnswer === '') ? 'button-secondary opacity-50 cursor-not-allowed' : 'button-secondary' }}"
-                        @disabled($questionDone || $studentAnswer === '')
+                        class="flex-1 rounded-full {{ $studentAnswer === '' ? 'button-secondary opacity-50 cursor-not-allowed' : 'button-secondary' }}"
+                        @disabled($studentAnswer === '')
 >
                         Vérifier
                     </button>
                 @endif
 
-                @if($remainingTries === 0)
+                @if($questionDone)
                     <button
                         wire:click="getNewConjugation"
-                        class="flex-1 button-secondary rounded-full"
+                        class="flex-1 button-primary rounded-full"
 >
                         Suivant
                     </button>
