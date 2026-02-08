@@ -73,23 +73,19 @@
                 </div>
             </div>
 
-            <!-- Groupes -->
+            <!-- Groupe -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <h3 class="text-lg font-semibold mb-4 text-secondary">{{ __('Your groups') }}</h3>
-                    @if($user->groups->isEmpty())
-                        <p class="text-gray-600">{{ __('You are not a member of any groups yet.') }}</p>
-                    @else
-                        <div class="flex flex-wrap gap-2">
-                            @foreach($user->groups as $group)
-                                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-light text-secondary">
-                                    <span class="font-medium">{{ $group->name }}</span>
-                                    @if($group->code)
-                                        <span class="text-xs bg-white text-secondary px-2 py-0.5 rounded-full border border-secondary/20">{{ $group->code }}</span>
-                                    @endif
-                                </div>
-                            @endforeach
+                    <h3 class="text-lg font-semibold mb-4 text-secondary">{{ __('Your class') }}</h3>
+                    @if($user->mainGroup)
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-light text-secondary">
+                            <span class="font-medium">{{ $user->mainGroup->name }}</span>
+                            @if($user->mainGroup->code)
+                                <span class="text-xs bg-white text-secondary px-2 py-0.5 rounded-full border border-secondary/20">{{ $user->mainGroup->code }}</span>
+                            @endif
                         </div>
+                    @else
+                        <p class="text-gray-600">{{ __('You are not assigned to a class yet.') }}</p>
                     @endif
                 </div>
             </div>

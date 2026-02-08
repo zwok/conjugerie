@@ -20,13 +20,18 @@ class Group extends Model
         'description',
         'code',
         'platform',
+        'year',
+    ];
+
+    protected $casts = [
+        'year' => 'integer',
     ];
 
     /**
-     * The users that belong to the group.
+     * The users whose main group is this group.
      */
     public function users()
     {
-        return $this->belongsToMany(User::class);
+        return $this->hasMany(User::class, 'main_group_id');
     }
 }

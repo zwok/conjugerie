@@ -3,7 +3,11 @@
     "allow": [
       "Bash(find:*)",
       "Bash(grep:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(xargs:*)",
+      "Bash(php artisan migrate:status:*)",
+      "Bash(php artisan migrate:*)",
+      "Bash(php artisan tinker:*)"
     ]
   }
 }

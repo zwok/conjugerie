@@ -35,34 +35,47 @@ Route::get('/auth/callback', function () {
         ]
     );
 
-    // Sync Smartschool groups to local DB
+    // Detect teacher status and main class group from Smartschool groups
     $platform = $smartSchoolUser->user['platform'] ?? null;
     $groups = $smartSchoolUser->user['groups'] ?? [];
 
-    $groupIds = [];
+    $isTeacher = false;
+    $classGroup = null;
+
     if ($platform && is_array($groups)) {
         foreach ($groups as $g) {
-            // Expected Smartschool fields: groupID, name, description, code
-            $group = Group::updateOrCreate(
-                [
-                    'external_id' => $g['groupID'] ?? ($g['id'] ?? null),
-                    'platform' => $platform,
-                ],
-                [
-                    'name' => $g['name'] ?? null,
-                    'description' => $g['description'] ?? null,
-                    'code' => $g['code'] ?? null,
-                ]
-            );
+            $code = $g['code'] ?? null;
+            $name = $g['name'] ?? '';
 
-            if ($group) {
-                $groupIds[] = $group->id;
+            // Detect teacher by LKR group code
+            if ($code === 'LKR') {
+                $isTeacher = true;
+            }
+
+            // Class group: name starts with a digit (e.g. "3A", "5B")
+            if (! $classGroup && preg_match('/^(\d)/', $name, $matches)) {
+                $classGroup = Group::updateOrCreate(
+                    [
+                        'external_id' => $g['groupID'] ?? ($g['id'] ?? null),
+                        'platform' => $platform,
+                    ],
+                    [
+                        'name' => $name,
+                        'description' => $g['description'] ?? null,
+                        'code' => $code,
+                        'year' => (int) $matches[1],
+                    ]
+                );
             }
         }
     }
 
-    // Replace the user's current memberships with Smartschool memberships
-    $user->groups()->sync($groupIds);
+    $user->update(['is_teacher' => $isTeacher]);
+
+    // Auto-detect main group if not already set (admin overrides persist)
+    if (! $user->main_group_id && $classGroup) {
+        $user->update(['main_group_id' => $classGroup->id]);
+    }
 
     Auth::login($user);
 
@@ -74,7 +87,7 @@ Route::get('/practice', function () {
 })->name('practice');
 
 Route::get('/dashboard', function () {
-    $user = Auth::user()->load('groups');
+    $user = Auth::user()->load('mainGroup');
     return view('dashboard', compact('user'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 

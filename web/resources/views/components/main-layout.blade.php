@@ -126,12 +126,60 @@
     </div>
 </header>
 
-<main class="w-full z-10 relative  flex justify-center py-4 md:py-10">
-    <!-- Main content -->
+@auth
+<main class="w-full z-10 relative py-4 md:py-10 px-4">
+    <div class="max-w-7xl mx-auto lg:grid lg:grid-cols-[280px_1fr_280px] lg:gap-6">
+        {{-- Left sidebar: desktop only --}}
+        <aside class="hidden lg:block sticky top-6 self-start">
+            <livewire:leaderboard type="weekly" />
+        </aside>
+
+        {{-- Center column --}}
+        <div class="max-w-2xl mx-auto lg:max-w-none">
+            <div class="bg-white rounded-lg p-5">
+                {{ $slot }}
+            </div>
+
+            {{-- Mobile: tabbed leaderboards below content --}}
+            <div class="lg:hidden mt-6" x-data="{ tab: 'weekly' }">
+                <div class="flex bg-white rounded-full p-1 shadow-md mb-4 border border-white">
+                    <button
+                        @click="tab = 'weekly'"
+                        :class="tab === 'weekly' ? 'bg-secondary text-white' : 'text-gray-500 hover:text-gray-700'"
+                        class="flex-1 text-sm font-semibold py-2 rounded-full text-center transition-colors"
+                    >
+                        Semaine
+                    </button>
+                    <button
+                        @click="tab = 'alltime'"
+                        :class="tab === 'alltime' ? 'bg-secondary text-white' : 'text-gray-500 hover:text-gray-700'"
+                        class="flex-1 text-sm font-semibold py-2 rounded-full text-center transition-colors"
+                    >
+                        Global
+                    </button>
+                </div>
+                <div x-show="tab === 'weekly'">
+                    <livewire:leaderboard type="weekly" />
+                </div>
+                <div x-show="tab === 'alltime'" style="display: none;">
+                    <livewire:leaderboard type="alltime" />
+                </div>
+            </div>
+        </div>
+
+        {{-- Right sidebar: desktop only --}}
+        <aside class="hidden lg:block sticky top-6 self-start">
+            <livewire:leaderboard type="alltime" />
+        </aside>
+    </div>
+</main>
+@else
+<main class="w-full z-10 relative flex justify-center py-4 md:py-10">
     <div class="w-2xl md:rounded-lg bg-white p-5">
         {{ $slot }}
     </div>
 </main>
+@endauth
 
 
 <!-- Livewire Scripts -->

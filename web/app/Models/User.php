@@ -25,6 +25,8 @@ class User extends Authenticatable
         'smartschool_id',
         'smartschool_username',
         'smartschool_platform',
+        'main_group_id',
+        'is_teacher',
     ];
 
     /**
@@ -47,6 +49,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_teacher' => 'boolean',
         ];
     }
 
@@ -59,27 +62,20 @@ class User extends Authenticatable
     }
 
     /**
-     * The groups that the user belongs to.
+     * The user's main group (used for leaderboards).
      */
-    public function groups()
+    public function mainGroup()
     {
-        return $this->belongsToMany(Group::class);
+        return $this->belongsTo(Group::class, 'main_group_id');
     }
 
     /**
      * Computed property to determine if the user is a teacher.
-     * A user is a teacher if they belong to a group with code 'LKR'.
      *
      * Usage: $user->is_teacher
      */
     public function getIsTeacherAttribute(): bool
     {
-        // If groups are already loaded, avoid an extra query
-        if ($this->relationLoaded('groups')) {
-            return (bool) $this->groups->firstWhere('code', 'LKR');
-        }
-
-        // Otherwise check via an existence query
-        return $this->groups()->where('code', 'LKR')->exists();
+        return (bool) $this->attributes['is_teacher'];
     }
 }
