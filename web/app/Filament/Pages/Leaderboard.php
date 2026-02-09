@@ -49,7 +49,6 @@ class Leaderboard extends Page implements HasTable
                     ->leftJoin('groups', 'users.main_group_id', '=', 'groups.id')
                     ->selectRaw('student_answers.user_id as id, users.name as user_name, groups.name as group_name, COUNT(*) as correct_count')
                     ->groupBy('student_answers.user_id', 'users.name', 'groups.name')
-                    ->orderByDesc('correct_count')
             )
             ->columns([
                 TextColumn::make('index')
@@ -95,6 +94,7 @@ class Leaderboard extends Page implements HasTable
                         }
                     }),
             ])
+            ->defaultSort('correct_count', 'desc')
             ->defaultPaginationPageOption(50)
             ->paginated([25, 50, 100]);
     }
