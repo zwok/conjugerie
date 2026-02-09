@@ -2,7 +2,8 @@
 
 namespace App\Filament\Resources\Verbs;
 
-use App\Filament\Resources\Verbs\Pages\ManageVerbs;
+use App\Filament\Resources\Verbs\Pages\EditVerb;
+use App\Filament\Resources\Verbs\Pages\ListVerbs;
 use App\Models\Verb;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
@@ -60,7 +61,8 @@ class VerbResource extends Resource
                 //
             ])
             ->recordActions([
-                EditAction::make()->label('Modifier'),
+                EditAction::make()->label('Modifier')
+                    ->url(fn ($record) => static::getUrl('edit', ['record' => $record])),
                 DeleteAction::make()->label('Supprimer'),
             ])
             ->toolbarActions([
@@ -73,14 +75,15 @@ class VerbResource extends Resource
     public static function getRelations(): array
     {
         return [
-            'posts' => RelationManagers\ConjugationsRelationManager::class,
+            'conjugations' => RelationManagers\ConjugationsRelationManager::class,
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => ManageVerbs::route('/'),
+            'index' => ListVerbs::route('/'),
+            'edit' => EditVerb::route('/{record}/edit'),
         ];
     }
 }

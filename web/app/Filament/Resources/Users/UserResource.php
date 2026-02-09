@@ -2,12 +2,14 @@
 
 namespace App\Filament\Resources\Users;
 
-use App\Filament\Resources\Users\Pages\ManageUsers;
+use App\Filament\Resources\Users\Pages\ListUsers;
+use App\Filament\Resources\Users\Pages\ViewUser;
 use App\Models\User;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
@@ -73,6 +75,8 @@ class UserResource extends Resource
                     ->preload(),
             ])
             ->recordActions([
+                ViewAction::make()->label('Voir')
+                    ->url(fn ($record) => static::getUrl('view', ['record' => $record])),
                 EditAction::make()->label('Modifier'),
             ])
             ->toolbarActions([
@@ -82,10 +86,25 @@ class UserResource extends Resource
             ]);
     }
 
+    public static function getWidgets(): array
+    {
+        return [
+            Widgets\UserStatsOverview::class,
+        ];
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            'studentAnswers' => RelationManagers\StudentAnswersRelationManager::class,
+        ];
+    }
+
     public static function getPages(): array
     {
         return [
-            'index' => ManageUsers::route('/'),
+            'index' => ListUsers::route('/'),
+            'view' => ViewUser::route('/{record}'),
         ];
     }
 }

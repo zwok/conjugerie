@@ -7,7 +7,8 @@
       "Bash(xargs:*)",
       "Bash(php artisan migrate:status:*)",
       "Bash(php artisan migrate:*)",
-      "Bash(php artisan tinker:*)"
+      "Bash(php artisan tinker:*)",
+      "Bash(php -l:*)"
     ]
   }
 }
