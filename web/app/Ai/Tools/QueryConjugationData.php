@@ -9,6 +9,7 @@ use App\Models\Tense;
 use App\Models\User;
 use App\Models\Verb;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\JsonSchema\Types\Type;
 use Laravel\Ai\Contracts\Tool;
 use Laravel\Ai\Tools\Request;
@@ -17,7 +18,7 @@ class QueryConjugationData implements Tool
 {
     public function description(): string
     {
-        return 'Query the conjugation database. Can retrieve verbs, tenses, conjugations, student answers, users, groups, and statistics like success rates and leaderboards.';
+        return 'Query the conjugation database. Can retrieve verbs, tenses, conjugations, student answers, users, groups, and statistics like success rates and leaderboards. Use "since" and "until" (YYYY-MM-DD) to filter by time period.';
     }
 
     public function schema(JsonSchema $schema): array
@@ -38,22 +39,51 @@ class QueryConjugationData implements Tool
             'tense' => Type::string()->nullable(),
             'group' => Type::string()->nullable(),
             'limit' => Type::integer()->nullable(),
+            'since' => Type::string()->nullable(),
+            'until' => Type::string()->nullable(),
         ];
     }
 
     public function handle(Request $request): string
     {
+        $since = $request['since'] ?? null;
+        $until = $request['until'] ?? null;
+
         return match ($request['query_type']) {
             'verbs' => $this->getVerbs(),
             'tenses' => $this->getTenses(),
             'conjugations_for_verb' => $this->getConjugationsForVerb($request['verb'] ?? null),
-            'verb_stats' => $this->getVerbStats($request['limit'] ?? 20),
-            'student_stats' => $this->getStudentStats($request['group'] ?? null),
+            'verb_stats' => $this->getVerbStats($request['limit'] ?? 20, $since, $until),
+            'student_stats' => $this->getStudentStats($request['group'] ?? null, $since, $until),
             'group_stats' => $this->getGroupStats(),
-            'leaderboard' => $this->getLeaderboard($request['group'] ?? null, $request['limit'] ?? 10),
-            'difficult_conjugations' => $this->getDifficultConjugations($request['tense'] ?? null, $request['limit'] ?? 10),
-            'overview' => $this->getOverview(),
+            'leaderboard' => $this->getLeaderboard($request['group'] ?? null, $request['limit'] ?? 10, $since, $until),
+            'difficult_conjugations' => $this->getDifficultConjugations($request['tense'] ?? null, $request['limit'] ?? 10, $since, $until),
+            'overview' => $this->getOverview($since, $until),
             default => 'Unknown query type.',
+        };
+    }
+
+    private function dateFilter(Builder $query, ?string $since, ?string $until): Builder
+    {
+        if ($since) {
+            $query->where('created_at', '>=', $since);
+        }
+        if ($until) {
+            $query->where('created_at', '<=', $until . ' 23:59:59');
+        }
+
+        return $query;
+    }
+
+    private function answerDateScope(?string $since, ?string $until): \Closure
+    {
+        return function ($q) use ($since, $until) {
+            if ($since) {
+                $q->where('student_answers.created_at', '>=', $since);
+            }
+            if ($until) {
+                $q->where('student_answers.created_at', '<=', $until . ' 23:59:59');
+            }
         };
     }
 
@@ -91,9 +121,11 @@ class QueryConjugationData implements Tool
         return json_encode($conjugations->toArray());
     }
 
-    private function getVerbStats(int $limit): string
+    private function getVerbStats(int $limit, ?string $since, ?string $until): string
     {
-        $verbs = Verb::with('conjugations.studentAnswers')
+        $dateScope = $this->answerDateScope($since, $until);
+
+        $verbs = Verb::with(['conjugations.studentAnswers' => $dateScope])
             ->get()
             ->map(function ($verb) {
                 $answers = $verb->conjugations->flatMap->studentAnswers;
@@ -120,12 +152,17 @@ class QueryConjugationData implements Tool
         return json_encode($verbs->toArray());
     }
 
-    private function getStudentStats(?string $group): string
+    private function getStudentStats(?string $group, ?string $since, ?string $until): string
     {
+        $dateScope = $this->answerDateScope($since, $until);
+
         $query = User::where('is_teacher', false)
             ->withCount([
-                'studentAnswers',
-                'studentAnswers as correct_count' => fn ($q) => $q->where('is_correct', true),
+                'studentAnswers' => $dateScope,
+                'studentAnswers as correct_count' => function ($q) use ($dateScope) {
+                    $dateScope($q);
+                    $q->where('is_correct', true);
+                },
             ]);
 
         if ($group) {
@@ -139,7 +176,7 @@ class QueryConjugationData implements Tool
             'success_rate' => $u->student_answers_count > 0
                 ? round($u->correct_count / $u->student_answers_count * 100, 1) . '%'
                 : 'N/A',
-        ]);
+        ])->filter(fn ($u) => $u['total_answers'] > 0)->values();
 
         return json_encode($users->toArray());
     }
@@ -155,11 +192,16 @@ class QueryConjugationData implements Tool
         return json_encode($groups->toArray());
     }
 
-    private function getLeaderboard(?string $group, int $limit): string
+    private function getLeaderboard(?string $group, int $limit, ?string $since, ?string $until): string
     {
+        $dateScope = $this->answerDateScope($since, $until);
+
         $query = User::where('is_teacher', false)
             ->withCount([
-                'studentAnswers as correct_count' => fn ($q) => $q->where('is_correct', true),
+                'studentAnswers as correct_count' => function ($q) use ($dateScope) {
+                    $dateScope($q);
+                    $q->where('is_correct', true);
+                },
             ])
             ->orderByDesc('correct_count')
             ->limit($limit);
@@ -176,14 +218,19 @@ class QueryConjugationData implements Tool
         return json_encode($users->toArray());
     }
 
-    private function getDifficultConjugations(?string $tense, int $limit): string
+    private function getDifficultConjugations(?string $tense, int $limit, ?string $since, ?string $until): string
     {
+        $dateScope = $this->answerDateScope($since, $until);
+
         $query = Conjugation::with(['verb', 'tense'])
             ->withCount([
-                'studentAnswers',
-                'studentAnswers as incorrect_count' => fn ($q) => $q->where('is_correct', false),
+                'studentAnswers' => $dateScope,
+                'studentAnswers as incorrect_count' => function ($q) use ($dateScope) {
+                    $dateScope($q);
+                    $q->where('is_correct', false);
+                },
             ])
-            ->whereHas('studentAnswers')
+            ->whereHas('studentAnswers', $dateScope)
             ->orderByDesc('incorrect_count')
             ->limit($limit);
 
@@ -204,20 +251,27 @@ class QueryConjugationData implements Tool
         return json_encode($conjugations->toArray());
     }
 
-    private function getOverview(): string
+    private function getOverview(?string $since, ?string $until): string
     {
+        $answersQuery = StudentAnswer::query();
+        $this->dateFilter($answersQuery, $since, $until);
+
+        $total = $answersQuery->count();
+        $correct = (clone $answersQuery)->where('is_correct', true)->count();
+
         return json_encode([
             'total_verbs' => Verb::count(),
             'total_tenses' => Tense::count(),
             'total_conjugations' => Conjugation::count(),
             'enabled_conjugations' => Conjugation::where('enabled', true)->count(),
             'total_students' => User::where('is_teacher', false)->count(),
-            'total_answers' => StudentAnswer::count(),
-            'correct_answers' => StudentAnswer::where('is_correct', true)->count(),
-            'overall_success_rate' => StudentAnswer::count() > 0
-                ? round(StudentAnswer::where('is_correct', true)->count() / StudentAnswer::count() * 100, 1) . '%'
+            'total_answers' => $total,
+            'correct_answers' => $correct,
+            'overall_success_rate' => $total > 0
+                ? round($correct / $total * 100, 1) . '%'
                 : 'N/A',
             'total_groups' => Group::count(),
+            'period' => ($since || $until) ? ['since' => $since, 'until' => $until] : 'all time',
         ]);
     }
 }
