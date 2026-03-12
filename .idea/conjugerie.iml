@@ -5,6 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/web/app" isTestSource="false" packagePrefix="App\" />
       <sourceFolder url="file://$MODULE_DIR$/web/database/factories" isTestSource="false" packagePrefix="Database\Factories\" />
       <sourceFolder url="file://$MODULE_DIR$/web/database/seeders" isTestSource="false" packagePrefix="Database\Seeders\" />
+      <sourceFolder url="file://$MODULE_DIR$/web/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/web/tests" isTestSource="true" packagePrefix="Tests\" />
       <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/web/vendor/anourvalar/eloquent-serialize" />
@@ -153,7 +154,6 @@
       <excludeFolder url="file://$MODULE_DIR$/web/vendor/ueberdosis/tiptap-php" />
       <excludeFolder url="file://$MODULE_DIR$/web/vendor/vlucas/phpdotenv" />
       <excludeFolder url="file://$MODULE_DIR$/web/vendor/voku/portable-ascii" />
-      <excludeFolder url="file://$MODULE_DIR$/web/vendor/webmozart/assert" />
       <excludeFolder url="file://$MODULE_DIR$/web/vendor/bacon/bacon-qr-code" />
       <excludeFolder url="file://$MODULE_DIR$/web/vendor/dasprid/enum" />
       <excludeFolder url="file://$MODULE_DIR$/web/vendor/laravel/fortify" />
@@ -169,6 +169,11 @@
       <excludeFolder url="file://$MODULE_DIR$/web/vendor/socialiteproviders/zoho" />
       <excludeFolder url="file://$MODULE_DIR$/web/vendor/barryvdh/laravel-debugbar" />
       <excludeFolder url="file://$MODULE_DIR$/web/vendor/php-debugbar/php-debugbar" />
+      <excludeFolder url="file://$MODULE_DIR$/web/storage/app" />
+      <excludeFolder url="file://$MODULE_DIR$/web/storage/debugbar" />
+      <excludeFolder url="file://$MODULE_DIR$/web/storage/framework" />
+      <excludeFolder url="file://$MODULE_DIR$/web/vendor/laravel/ai" />
+      <excludeFolder url="file://$MODULE_DIR$/web/vendor/prism-php/prism" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -38,7 +38,7 @@ class ConjugationsRelationManager extends RelationManager
                 Select::make('person')
                     ->label('Personne')
                     ->options([
-                        'je' => 'Je',
+                        'je' => 'Je/J',
                         'tu' => 'Tu',
                         'il_elle_on' => 'Il/Elle/On',
                         'nous' => 'Nous',

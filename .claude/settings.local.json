@@ -8,7 +8,8 @@
       "Bash(php artisan migrate:status:*)",
       "Bash(php artisan migrate:*)",
       "Bash(php artisan tinker:*)",
-      "Bash(php -l:*)"
+      "Bash(php -l:*)",
+      "Bash(cd /Users/yannickkalokerinos/Personal/Maaktamee/projecten/conjugerie/web && composer require echolabs/prism 2>&1 | tail -20)"
     ]
   }
 }
