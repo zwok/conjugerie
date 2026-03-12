@@ -4,6 +4,8 @@ namespace App\Filament\Widgets;
 
 use App\Ai\ConjugationAgent;
 use Filament\Widgets\Widget;
+use Laravel\Ai\Streaming\Events\StreamEvent;
+use Laravel\Ai\Streaming\Events\TextDelta;
 use Livewire\Attributes\Validate;
 
 class AiAssistant extends Widget
@@ -15,7 +17,9 @@ class AiAssistant extends Widget
     #[Validate('required|string|max:500')]
     public string $question = '';
 
-    public string $answer = '';
+    public array $messages = [];
+
+    public string $streamedText = '';
 
     public bool $loading = false;
 
@@ -23,16 +27,34 @@ class AiAssistant extends Widget
     {
         $this->validate();
 
+        $this->messages[] = ['role' => 'user', 'content' => $this->question];
+        $this->streamedText = '';
         $this->loading = true;
-        $this->answer = '';
+        $prompt = $this->question;
+        $this->question = '';
 
         try {
-            $response = ConjugationAgent::make()->prompt($this->question);
-            $this->answer = $response->text;
+            $response = ConjugationAgent::make()->stream($prompt);
+
+            $response->each(function (StreamEvent $event) {
+                if ($event instanceof TextDelta) {
+                    $this->streamedText .= $event->delta;
+                    $this->stream('streamedResponse', $event->delta);
+                }
+            });
+
+            $this->messages[] = ['role' => 'assistant', 'content' => $this->streamedText];
+            $this->streamedText = '';
         } catch (\Throwable $e) {
-            $this->answer = 'Error: ' . $e->getMessage();
+            $this->messages[] = ['role' => 'assistant', 'content' => 'Error: ' . $e->getMessage()];
         } finally {
             $this->loading = false;
         }
+    }
+
+    public function clearChat(): void
+    {
+        $this->messages = [];
+        $this->streamedText = '';
     }
 }
