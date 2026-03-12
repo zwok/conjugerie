@@ -4,12 +4,26 @@ namespace App\Ai;
 
 use App\Ai\Tools\QueryConjugationData;
 use Laravel\Ai\Contracts\Agent;
+use Laravel\Ai\Contracts\Conversational;
 use Laravel\Ai\Contracts\HasTools;
+use Laravel\Ai\Messages\Message;
 use Laravel\Ai\Promptable;
 
-class ConjugationAgent implements Agent, HasTools
+class ConjugationAgent implements Agent, Conversational, HasTools
 {
     use Promptable;
+
+    private array $conversationMessages = [];
+
+    public function withMessages(array $messages): static
+    {
+        $this->conversationMessages = array_map(
+            fn (array $msg) => Message::tryFrom($msg),
+            $messages
+        );
+
+        return $this;
+    }
 
     public function instructions(): string
     {
@@ -31,6 +45,11 @@ class ConjugationAgent implements Agent, HasTools
         - You can call the tool multiple times with different query_types to combine data.
         - When the user asks about a time period (e.g. "last week", "this month"), convert it to "since" and "until" dates in YYYY-MM-DD format.
         PROMPT;
+    }
+
+    public function messages(): iterable
+    {
+        return $this->conversationMessages;
     }
 
     public function tools(): array

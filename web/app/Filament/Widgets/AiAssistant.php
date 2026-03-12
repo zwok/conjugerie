@@ -34,7 +34,9 @@ class AiAssistant extends Widget
         $this->question = '';
 
         try {
-            $response = ConjugationAgent::make()->stream($prompt);
+            $response = ConjugationAgent::make()
+                ->withMessages($this->messages)
+                ->stream($prompt);
 
             $response->each(function (StreamEvent $event) {
                 if ($event instanceof TextDelta) {
