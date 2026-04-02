@@ -30,9 +30,6 @@ class VerbResource extends Resource
                 TextInput::make('infinitive')
                     ->label('Infinitif')
                     ->required(),
-                TextInput::make('group')
-                    ->label('Groupe')
-                    ->required(),
             ]);
     }
 
@@ -42,9 +39,6 @@ class VerbResource extends Resource
             ->columns([
                 TextColumn::make('infinitive')
                     ->label('Infinitif')
-                    ->searchable(),
-                TextColumn::make('group')
-                    ->label('Groupe')
                     ->searchable(),
                 TextColumn::make('created_at')
                     ->label('Créé le')

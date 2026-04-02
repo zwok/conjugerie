@@ -12,54 +12,17 @@ class VerbSeeder extends Seeder
      */
     public function run(): void
     {
-        // Common first group (-er) verbs
-        $firstGroupVerbs = [
-            ['infinitive' => 'aimer', 'group' => 'first'],
-            ['infinitive' => 'parler', 'group' => 'first'],
-            ['infinitive' => 'manger', 'group' => 'first'],
-            ['infinitive' => 'donner', 'group' => 'first'],
-            ['infinitive' => 'travailler', 'group' => 'first'],
-            ['infinitive' => 'écouter', 'group' => 'first'],
-            ['infinitive' => 'regarder', 'group' => 'first'],
-            ['infinitive' => 'chercher', 'group' => 'first'],
-            ['infinitive' => 'demander', 'group' => 'first'],
-            ['infinitive' => 'jouer', 'group' => 'first'],
+        $verbs = [
+            'aimer', 'parler', 'manger', 'donner', 'travailler',
+            'écouter', 'regarder', 'chercher', 'demander', 'jouer',
+            'finir', 'choisir', 'réfléchir', 'réussir', 'grandir',
+            'être', 'avoir', 'aller', 'faire', 'dire',
+            'venir', 'voir', 'savoir', 'pouvoir', 'vouloir',
+            'prendre', 'mettre', 'lire', 'écrire', 'boire',
         ];
 
-        // Common second group (-ir) verbs
-        $secondGroupVerbs = [
-            ['infinitive' => 'finir', 'group' => 'second'],
-            ['infinitive' => 'choisir', 'group' => 'second'],
-            ['infinitive' => 'réfléchir', 'group' => 'second'],
-            ['infinitive' => 'réussir', 'group' => 'second'],
-            ['infinitive' => 'grandir', 'group' => 'second'],
-        ];
-
-        // Common third group verbs (selected examples)
-        $thirdGroupVerbs = [
-            ['infinitive' => 'être', 'group' => 'third'],
-            ['infinitive' => 'avoir', 'group' => 'third'],
-            ['infinitive' => 'aller', 'group' => 'third'],
-            ['infinitive' => 'faire', 'group' => 'third'],
-            ['infinitive' => 'dire', 'group' => 'third'],
-            ['infinitive' => 'venir', 'group' => 'third'],
-            ['infinitive' => 'voir', 'group' => 'third'],
-            ['infinitive' => 'savoir', 'group' => 'third'],
-            ['infinitive' => 'pouvoir', 'group' => 'third'],
-            ['infinitive' => 'vouloir', 'group' => 'third'],
-            ['infinitive' => 'prendre', 'group' => 'third'],
-            ['infinitive' => 'mettre', 'group' => 'third'],
-            ['infinitive' => 'lire', 'group' => 'third'],
-            ['infinitive' => 'écrire', 'group' => 'third'],
-            ['infinitive' => 'boire', 'group' => 'third'],
-        ];
-
-        // Combine all verbs
-        $allVerbs = array_merge($firstGroupVerbs, $secondGroupVerbs, $thirdGroupVerbs);
-
-        // Insert verbs into the database
-        foreach ($allVerbs as $verb) {
-            Verb::create($verb);
+        foreach ($verbs as $infinitive) {
+            Verb::create(['infinitive' => $infinitive]);
         }
     }
 }

@@ -22,7 +22,7 @@
     <!-- Additional Styles -->
     @stack('styles')
 </head>
-<body class="antialiased background  min-h-screen">
+<body class="antialiased  min-h-screen bg-cover" style="background-image: url(/img/bg4.png)">
 {{--<img class="fixed z-0 -top-10" src="/img/bg_topleft.png" alt="">--}}
 {{--<img class="fixed z-0 -bottom-10 -right-10" src="/img/bg_bottomright.png" alt="">--}}
 
@@ -127,16 +127,18 @@
 </header>
 
 @auth
-<main class="w-full z-10 relative py-4 md:py-10 px-4">
-    <div class="max-w-7xl mx-auto lg:grid lg:grid-cols-[280px_1fr_280px] lg:gap-6">
+<main class="w-full z-10 relative py-4 md:py-10 px-4 lg:min-h-[calc(100vh-80px)]">
+    <div class="max-w-7xl mx-auto lg:grid lg:grid-cols-[280px_1fr_280px] lg:gap-6 lg:min-h-[calc(100vh-160px)]">
         {{-- Left sidebar: desktop only --}}
-        <aside class="hidden lg:block sticky top-6 self-start">
-            <livewire:leaderboard type="weekly" />
+        <aside class="hidden lg:block">
+            <div class="sticky top-6 h-[50vh]">
+                <livewire:leaderboard type="weekly" />
+            </div>
         </aside>
 
         {{-- Center column --}}
-        <div class="max-w-2xl mx-auto lg:max-w-none">
-            <div class="bg-white rounded-lg p-5">
+        <div class="max-w-2xl mx-auto lg:max-w-none lg:flex lg:flex-col">
+            <div class="bg-white rounded-lg p-5 flex-1">
                 {{ $slot }}
             </div>
 
@@ -168,8 +170,10 @@
         </div>
 
         {{-- Right sidebar: desktop only --}}
-        <aside class="hidden lg:block sticky top-6 self-start">
-            <livewire:leaderboard type="alltime" />
+        <aside class="hidden lg:block">
+            <div class="sticky top-6 h-[50vh]">
+                <livewire:leaderboard type="alltime" />
+            </div>
         </aside>
     </div>
 </main>

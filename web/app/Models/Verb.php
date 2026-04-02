@@ -8,7 +8,6 @@ class Verb extends Model
 {
     protected $fillable = [
         'infinitive',
-        'group',
     ];
 
     /**
