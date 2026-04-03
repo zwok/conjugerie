@@ -22,7 +22,7 @@
     <!-- Additional Styles -->
     @stack('styles')
 </head>
-<body class="antialiased  min-h-screen bg-cover" style="background-image: url(/img/bg4.png)">
+<body class="antialiased min-h-screen bg-cover flex flex-col" style="background-image: url(/img/bg5.png)">
 {{--<img class="fixed z-0 -top-10" src="/img/bg_topleft.png" alt="">--}}
 {{--<img class="fixed z-0 -bottom-10 -right-10" src="/img/bg_bottomright.png" alt="">--}}
 
@@ -127,17 +127,15 @@
 </header>
 
 @auth
-<main class="w-full z-10 relative py-4 md:py-10 px-4 lg:min-h-[calc(100vh-80px)]">
-    <div class="max-w-7xl mx-auto lg:grid lg:grid-cols-[280px_1fr_280px] lg:gap-6 lg:min-h-[calc(100vh-160px)]">
+<main class="w-full z-10 relative py-4 md:py-6 px-4 lg:px-6 flex-1">
+    <div class="max-w-7xl mx-auto lg:grid lg:grid-cols-[280px_auto_280px] lg:gap-6 w-full lg:justify-center">
         {{-- Left sidebar: desktop only --}}
-        <aside class="hidden lg:block">
-            <div class="sticky top-6 h-[50vh]">
-                <livewire:leaderboard type="weekly" />
-            </div>
+        <aside class="hidden lg:block lg:min-h-[50vh]">
+            <livewire:leaderboard type="weekly" />
         </aside>
 
         {{-- Center column --}}
-        <div class="max-w-2xl mx-auto lg:max-w-none lg:flex lg:flex-col">
+        <div class="max-w-2xl mx-auto lg:w-2xl">
             <div class="bg-white rounded-lg p-5 flex-1">
                 {{ $slot }}
             </div>
@@ -170,21 +168,23 @@
         </div>
 
         {{-- Right sidebar: desktop only --}}
-        <aside class="hidden lg:block">
-            <div class="sticky top-6 h-[50vh]">
-                <livewire:leaderboard type="alltime" />
-            </div>
+        <aside class="hidden lg:block lg:min-h-[50vh]">
+            <livewire:leaderboard type="alltime" />
         </aside>
     </div>
 </main>
 @else
-<main class="w-full z-10 relative flex justify-center py-4 md:py-10">
+<main class="w-full z-10 relative flex justify-center py-4 md:py-10 flex-1">
     <div class="w-2xl md:rounded-lg bg-white p-5">
         {{ $slot }}
     </div>
 </main>
 @endauth
 
+
+<footer class="w-full z-10 relative py-4 text-center text-white/60 text-sm">
+    &copy; {{ date('Y') }} {{ config('app.name', 'La Conjugerie') }}. Tous droits réservés.
+</footer>
 
 <!-- Livewire Scripts -->
 @livewireScripts

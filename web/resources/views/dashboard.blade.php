@@ -1,93 +1,90 @@
 <x-main-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-100 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
+    <div class="max-w-2xl mx-auto p-0 md:p-6">
+        <h1 class="text-3xl font-bold text-center mb-8 text-secondary">Mon compte</h1>
 
-    <div class="py-6">
-        <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 space-y-6">
-
-            <!-- Profil + Actions rapides -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                        <div class="flex items-center gap-4">
-                            <!-- Avatar initiales -->
-                            <div class="h-14 w-14 rounded-full bg-secondary text-white flex items-center justify-center text-xl font-bold">
-                                {{ str(mb_substr($user->name, 0, 1))->upper() }}
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-bold text-secondary">{{ $user->name }}</h3>
-                                <div class="mt-1 flex items-center gap-2">
-                                    <span class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold {{ $user->is_teacher ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
-                                        @if($user->is_teacher)
-                                            {{ __('Teacher') }}: {{ __('Yes') }}
-                                        @else
-                                            {{ __('Teacher') }}: {{ __('No') }}
-                                        @endif
-                                    </span>
-                                    @if($user->email)
-                                        <span class="text-sm text-gray-500">{{ $user->email }}</span>
-                                    @endif
-                                </div>
-                            </div>
+        <div class="mb-8">
+            <!-- Statistics Section -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div class="bg-secondary-light p-6 rounded-lg">
+                    <h2 class="text-lg font-bold text-secondary mb-3 text-center">Cette semaine</h2>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-dark">Réponses:</span>
+                            <span class="text-secondary font-bold text-xl">{{ $weekAnswers }}</span>
                         </div>
-
+                        <div class="flex justify-between items-center">
+                            <span class="text-dark">Correctes:</span>
+                            <span class="text-secondary font-bold text-xl">{{ $weekCorrect }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-dark">Pourcentage:</span>
+                            <span class="text-secondary font-bold text-xl">{{ $weekPercentage }}%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-secondary-light p-6 rounded-lg">
+                    <h2 class="text-lg font-bold text-secondary mb-3 text-center">Global</h2>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-dark">Réponses:</span>
+                            <span class="text-secondary font-bold text-xl">{{ $totalAnswers }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-dark">Correctes:</span>
+                            <span class="text-secondary font-bold text-xl">{{ $correctAnswers }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-dark">Pourcentage:</span>
+                            <span class="text-secondary font-bold text-xl">{{ $globalPercentage }}%</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Informations du compte -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <h3 class="text-lg font-semibold mb-4 text-secondary">{{ __('Your account') }}</h3>
-                    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div>
-                            <dt class="text-sm text-gray-500">{{ __('Name') }}</dt>
-                            <dd class="font-medium">{{ $user->name }}</dd>
-                        </div>
-                        <div>
-                            <dt class="text-sm text-gray-500">{{ __('Email') }}</dt>
-                            <dd class="font-medium">{{ $user->email }}</dd>
-                        </div>
-                        <div>
-                            <dt class="text-sm text-gray-500">{{ __('Smartschool ID') }}</dt>
-                            <dd class="font-medium">{{ $user->smartschool_id ?? '—' }}</dd>
-                        </div>
-                        <div>
-                            <dt class="text-sm text-gray-500">{{ __('Smartschool username') }}</dt>
-                            <dd class="font-medium">{{ $user->smartschool_username ?? '—' }}</dd>
-                        </div>
-                        <div class="sm:col-span-2">
-                            <dt class="text-sm text-gray-500">{{ __('Smartschool platform') }}</dt>
-                            <dd class="font-medium break-all">
-                                @if($user->smartschool_platform)
-                                    <a href="{{ $user->smartschool_platform }}" target="_blank" rel="noopener" class="text-secondary underline hover:no-underline">{{ $user->smartschool_platform }}</a>
-                                @else
-                                    —
-                                @endif
-                            </dd>
-                        </div>
-                    </dl>
+            <div class="bg-secondary-light p-6 rounded-lg mb-6">
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-dark font-medium">Nom:</span>
+                        <span class="text-secondary font-bold">{{ $user->name }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-dark font-medium">ID Smartschool:</span>
+                        <span class="text-secondary font-bold">{{ $user->smartschool_id ?? '—' }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-dark font-medium">Nom d'utilisateur:</span>
+                        <span class="text-secondary font-bold">{{ $user->smartschool_username ?? '—' }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-dark font-medium">Plateforme Smartschool:</span>
+                        <span class="text-secondary font-bold">
+                            @if($user->smartschool_platform)
+                                <a href="{{ $user->smartschool_platform }}" target="_blank" rel="noopener" class="underline hover:no-underline">{{ $user->smartschool_platform }}</a>
+                            @else
+                                —
+                            @endif
+                        </span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Groupe -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <h3 class="text-lg font-semibold mb-4 text-secondary">{{ __('Your class') }}</h3>
-                    @if($user->mainGroup)
-                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-light text-secondary">
-                            <span class="font-medium">{{ $user->mainGroup->name }}</span>
-                            @if($user->mainGroup->code)
-                                <span class="text-xs bg-white text-secondary px-2 py-0.5 rounded-full border border-secondary/20">{{ $user->mainGroup->code }}</span>
-                            @endif
-                        </div>
-                    @else
-                        <p class="text-gray-600">{{ __('You are not assigned to a class yet.') }}</p>
-                    @endif
+            <div class="bg-secondary-light p-6 rounded-lg">
+                <div class="flex justify-between items-center">
+                    <span class="text-dark font-medium">Votre classe:</span>
+                    <span class="text-secondary font-bold">
+                        @if($user->mainGroup)
+                            {{ $user->mainGroup->name }}
+                        @else
+                            —
+                        @endif
+                    </span>
                 </div>
+            </div>
+
+            <div class="mt-6">
+                <a href="{{ route('practice') }}" class="block w-full button-primary rounded-full text-center text-lg py-3">
+                    Pratiquer
+                </a>
             </div>
         </div>
     </div>

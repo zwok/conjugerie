@@ -88,7 +88,19 @@ Route::get('/practice', function () {
 
 Route::get('/dashboard', function () {
     $user = Auth::user()->load('mainGroup');
-    return view('dashboard', compact('user'));
+
+    // Global statistics
+    $totalAnswers = $user->studentAnswers()->count();
+    $correctAnswers = $user->studentAnswers()->where('is_correct', true)->count();
+    $globalPercentage = $totalAnswers > 0 ? round(($correctAnswers / $totalAnswers) * 100, 1) : 0;
+
+    // This week statistics
+    $weekStart = now()->startOfWeek();
+    $weekAnswers = $user->studentAnswers()->where('created_at', '>=', $weekStart)->count();
+    $weekCorrect = $user->studentAnswers()->where('is_correct', true)->where('created_at', '>=', $weekStart)->count();
+    $weekPercentage = $weekAnswers > 0 ? round(($weekCorrect / $weekAnswers) * 100, 1) : 0;
+
+    return view('dashboard', compact('user', 'totalAnswers', 'correctAnswers', 'globalPercentage', 'weekAnswers', 'weekCorrect', 'weekPercentage'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

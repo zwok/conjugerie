@@ -1,6 +1,6 @@
 <div wire:poll.60s class="h-full">
-    <div class="bg-secondary rounded-lg p-4 shadow-sm h-full flex flex-col text-white">
-        <h3 class="text-base font-bold text-white mb-3">
+    <div class="bg-secondary rounded-lg p-4 shadow-sm flex flex-col text-white h-full">
+        <h3 class="text-base font-bold text-white mb-3 text-center">
             @if($type === 'weekly')
                 Classement de la semaine
             @else
