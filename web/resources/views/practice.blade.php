@@ -1,6 +1,3 @@
 <x-main-layout>
-    <!-- Practice component with floating animation -->
-    <div class="float-animation">
-        <livewire:conjugation-practice />
-    </div>
+    <livewire:conjugation-practice :conjugationSetId="$conjugationSet->id ?? null" />
 </x-main-layout>

@@ -11,6 +11,7 @@ class StudentAnswer extends Model
         'conjugation_id',
         'student_answer',
         'is_correct',
+        'xp',
         'attempt_count',
         'last_practiced_at',
     ];

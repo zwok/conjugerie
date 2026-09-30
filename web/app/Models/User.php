@@ -69,6 +69,56 @@ class User extends Authenticatable
         return $this->belongsTo(Group::class, 'main_group_id');
     }
 
+    public function totalXp(): int
+    {
+        return (int) $this->studentAnswers()->sum('xp');
+    }
+
+    public function weeklyXp(): int
+    {
+        return (int) $this->studentAnswers()
+            ->where('created_at', '>=', now()->startOfWeek())
+            ->sum('xp');
+    }
+
+    /**
+     * Days (Y-m-d) on which the user answered at least one question, newest first.
+     *
+     * @return list<string>
+     */
+    public function practiceDays(int $limit = 400): array
+    {
+        return $this->studentAnswers()
+            ->selectRaw('DATE(created_at) as day')
+            ->groupBy('day')
+            ->orderByDesc('day')
+            ->limit($limit)
+            ->pluck('day')
+            ->all();
+    }
+
+    /**
+     * Number of consecutive days practiced, counting back from today
+     * (or from yesterday when today has no answers yet).
+     */
+    public function streak(): int
+    {
+        $days = array_flip($this->practiceDays());
+        $cursor = today();
+
+        if (! isset($days[$cursor->toDateString()])) {
+            $cursor = $cursor->subDay();
+        }
+
+        $streak = 0;
+        while (isset($days[$cursor->toDateString()])) {
+            $streak++;
+            $cursor = $cursor->subDay();
+        }
+
+        return $streak;
+    }
+
     /**
      * Computed property to determine if the user is a teacher.
      *

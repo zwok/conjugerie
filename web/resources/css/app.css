@@ -1,46 +1,141 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
+    --font-sans: "Quicksand", ui-sans-serif, system-ui, sans-serif;
+
     --color-primary: #57cc02;
+    --color-primary-dark: #46a302;
     --color-primary-light: #8ccc5f;
     --color-secondary: #235391;
+    --color-secondary-dark: #183b68;
     --color-secondary-light: #e2f6ff;
     --color-base: #235391;
     --color-grey: #bcbcbc;
     --color-dark: #515151;
+
+    --animate-shake: shake 0.4s ease-in-out;
+    --animate-pop: pop 0.35s ease-out;
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        20%, 60% { transform: translateX(-8px); }
+        40%, 80% { transform: translateX(8px); }
+    }
+
+    @keyframes pop {
+        0% { transform: scale(0.9); opacity: 0; }
+        60% { transform: scale(1.04); opacity: 1; }
+        100% { transform: scale(1); }
+    }
 }
 
+/* Theme-aware colors: light values here, dark values under .dark */
+@theme inline {
+    --color-surface: var(--surface);
+    --color-surface-2: var(--surface-2);
+    --color-ink: var(--ink);
+    --color-ink-soft: var(--ink-soft);
+    --color-line: var(--line);
+    --color-accent: var(--accent);
+}
+
+:root {
+    --surface: #ffffff;
+    --surface-2: #e9f6fd;
+    --ink: #1f2937;
+    --ink-soft: #5b6472;
+    --line: #dbe3ec;
+    --accent: #235391;
+    --page: radial-gradient(120% 80% at 0% 0%, #2a86a8 0%, transparent 60%),
+        radial-gradient(90% 90% at 100% 15%, #56923a 0%, transparent 60%),
+        #efe5d3;
+}
+
+.dark {
+    --surface: #162033;
+    --surface-2: #1f2c45;
+    --ink: #f1f5f9;
+    --ink-soft: #9aa8bd;
+    --line: #2c3a55;
+    --accent: #8fc1ff;
+    --page: radial-gradient(120% 80% at 0% 0%, #1d4f6b 0%, transparent 60%),
+        radial-gradient(90% 90% at 100% 15%, #2c5220 0%, transparent 60%),
+        #0b1220;
+    color-scheme: dark;
+}
+
+@layer base {
+    body {
+        background: var(--page);
+        background-attachment: fixed;
+        color: var(--ink);
+    }
+}
 
 @layer components {
-    .background {
-        background-color: --color-primary;
-        opacity: 1;
-        background: radial-gradient(circle, transparent 20%, #235391 20%, #235391 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, #235391 20%, #235391 80%, transparent 80%, transparent) 45px 45px, linear-gradient(#39659f 3.6px, transparent 3.6px) 0 -1.8px, linear-gradient(90deg, #39659f 3.6px, #235391 3.6px) -1.8px 0;
-        background-size: 90px 90px, 90px 90px, 45px 45px, 45px 45px;
+    /* Chunky "3D" buttons: a darker bottom edge that flattens when pressed */
+    .button-primary,
+    .button-secondary,
+    .button-grey {
+        @apply inline-block rounded-2xl px-5 py-2.5 text-center font-bold text-white cursor-pointer select-none;
+        box-shadow: 0 4px 0 var(--button-shade);
+        transition: transform 0.08s, box-shadow 0.08s, filter 0.15s;
+    }
+
+    .button-primary:hover,
+    .button-secondary:hover,
+    .button-grey:hover {
+        filter: brightness(1.06);
+    }
+
+    .button-primary:active,
+    .button-secondary:active,
+    .button-grey:active {
+        transform: translateY(4px);
+        box-shadow: 0 0 0 var(--button-shade);
     }
 
     .button-primary {
         @apply bg-primary;
-        @apply rounded-full;
-        @apply px-4 py-2;
-        color: white;
-        font-weight: bold;
+        --button-shade: var(--color-primary-dark);
     }
 
     .button-secondary {
         @apply bg-secondary;
-        @apply rounded-full;
-        @apply px-4 py-2;
-        color: white;
-        font-weight: bold;
+        --button-shade: var(--color-secondary-dark);
     }
 
     .button-grey {
         @apply bg-grey;
-        @apply rounded-full;
-        @apply px-4 py-2;
-        color: white;
-        font-weight: bold;
+        --button-shade: #9a9a9a;
+    }
+
+    .nav-link {
+        @apply rounded-xl px-3 py-2 transition-colors hover:bg-white/15;
+    }
+
+    .card {
+        @apply rounded-2xl bg-surface-2 p-5;
+    }
+
+    .chip {
+        @apply inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-bold;
+    }
+
+    .accent-key {
+        @apply h-10 min-w-10 rounded-xl border-2 border-b-4 border-line bg-surface px-2 text-lg font-bold text-ink cursor-pointer;
+    }
+
+    .accent-key:active {
+        @apply border-b-2 translate-y-0.5;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
     }
 }

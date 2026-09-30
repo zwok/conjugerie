@@ -24,5 +24,8 @@ class DatabaseSeeder extends Seeder
 
         // Then call the conjugation seeder to create conjugations for those verbs
         $this->call(ConjugationSeeder::class);
+
+        // Finally, create conjugation sets
+        $this->call(ConjugationSetSeeder::class);
     }
 }

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Group extends Model
 {
@@ -30,8 +32,17 @@ class Group extends Model
     /**
      * The users whose main group is this group.
      */
-    public function users()
+    public function users(): HasMany
     {
         return $this->hasMany(User::class, 'main_group_id');
+    }
+
+    /**
+     * Get the conjugation sets assigned to this group.
+     */
+    public function conjugationSets(): BelongsToMany
+    {
+        return $this->belongsToMany(ConjugationSet::class, 'conjugation_set_group')
+            ->withTimestamps();
     }
 }
