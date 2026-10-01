@@ -10,7 +10,29 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
 
 Route::get('/', function () {
-    return view('welcome');
+    // Live activity shown on the landing page as a nudge to start practicing
+    $weekStart = now()->startOfWeek();
+
+    $stats = [
+        'conjugations' => \App\Models\Conjugation::where('enabled', true)->count(),
+        'answersThisWeek' => \App\Models\StudentAnswer::where('created_at', '>=', $weekStart)->count(),
+        'activeStudents' => \App\Models\StudentAnswer::where('created_at', '>=', $weekStart)->distinct()->count('user_id'),
+        'answersTotal' => \App\Models\StudentAnswer::count(),
+    ];
+
+    // Most active classes this week
+    $topGroups = \App\Models\StudentAnswer::query()
+        ->join('users', 'users.id', '=', 'student_answers.user_id')
+        ->join('groups', 'groups.id', '=', 'users.main_group_id')
+        ->where('student_answers.created_at', '>=', $weekStart)
+        ->where('student_answers.is_correct', true)
+        ->selectRaw('groups.name as name, SUM(student_answers.xp) as xp')
+        ->groupBy('groups.id', 'groups.name')
+        ->orderByDesc('xp')
+        ->limit(3)
+        ->get();
+
+    return view('welcome', compact('stats', 'topGroups'));
 })->name('welcome');
 
 
